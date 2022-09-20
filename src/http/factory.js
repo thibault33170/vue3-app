@@ -1,29 +1,38 @@
 import { $axios } from '@/http/axios'
 
+function createQueryString(obj) {
+    const params = new URLSearchParams('')
+
+    for (let key in obj) {
+        params.append(key, obj[key])
+    }
+
+    return params.toString()
+}
+
 class JsonApi {
     constructor(resource) {
         this.resource = resource
     }
 
-    async getAll() {
-        return await $axios.get(`/${this.resource}/`)
+    async getAll(params) {
+        return await $axios.get(`/${this.resource}?${createQueryString(params)}`)
     }
 
-    getOne(id) {
-        return $axios.get(`/${this.resource}/${id}`)
+    async getOne(id) {
+        return await $axios.get(`/${this.resource}/${id}`)
     }
 
-    createOne(payload) {
-        debugger
-        return $axios.post(`/${this.resource}`, payload)
+    async createOne(payload) {
+        return await $axios.post(`/${this.resource}`, payload)
     }
 
-    updateOne(id, payload) {
-        return $axios.put(`/${this.resource}/${id}`, payload)
+    async updateOne(id, payload) {
+        return await $axios.put(`/${this.resource}/${id}`, payload)
     }
 
-    deleteOne(id) {
-        return $axios.delete(`/${this.resource}/${id}`)
+    async deleteOne(id) {
+        return await $axios.delete(`/${this.resource}/${id}`)
     }
 }
 

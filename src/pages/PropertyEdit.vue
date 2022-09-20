@@ -37,7 +37,7 @@
                     <option value="unavailable">Unavailable</option>
                 </select>
             </div>
-            <button type="submit" @click.prevent="submitForm"
+            <button type="submit" @click.prevent="updateProperty"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
         </form>
     </div>
@@ -49,24 +49,31 @@
 import { computed } from 'vue'
 
 import { usePropertyStore } from '@/store/property.store'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
     setup() {
         const route = useRoute()
+        const router = useRouter()
 
         const propertyStore = usePropertyStore()
 
-        propertyStore.getProperties()
+        propertyStore.fetchProperties({ page: 0, paginate: 5 })
 
-        const property = computed(() => propertyStore.getProperty(+route.params.id))
+        const property = computed(() => propertyStore.getProperty(route.params.id))
 
-        const submitForm = () => {
-            propertyStore.updateProperty(+route.params.id, property)
+        const updateProperty = async () => {
+            await propertyStore.updateProperty(route.params.id, property)
+
+            router.push({
+                name: 'PropertyList',
+            })
         }
+
         return {
             property,
-            submitForm
+
+            updateProperty
         }
     },
 

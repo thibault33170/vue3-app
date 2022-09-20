@@ -48,19 +48,27 @@
 <script>
 import { reactive } from 'vue'
 
+import { useRouter } from 'vue-router'
 import { usePropertyStore } from '@/store/property.store'
 
 export default {
     setup() {
+        const router = useRouter()
+
         const propertyStore = usePropertyStore()
 
         propertyStore.getProperties()
 
         const property = reactive({ name: "", amount: 0, surface: 0, status: "available", user_id: 1 })
 
-        const submitForm = () => {
-            propertyStore.createProperty(property)
+        const submitForm = async () => {
+            await propertyStore.createProperty(property)
+
+            router.push({
+                name: 'PropertyList',
+            })
         }
+
         return {
             property,
             submitForm

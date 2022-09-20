@@ -27,10 +27,9 @@
                         Author Name
                     </p>
                 </a>
-                <a class="no-underline text-grey-darker hover:text-red-dark" href="#">
-                    <span class="hidden">Like</span>
-                    <i class="fa fa-heart"></i>
-                </a>
+                <span class="text-black cursor-pointer" @click.stop="deleteProperty">
+                    <i class="fa fa-trash"></i>
+                </span>
             </footer>
 
         </article>
@@ -41,20 +40,27 @@
 </template>
 
 <script>
+import { computed } from 'vue'
 import { usePropertyStore } from '@/store/property.store'
 
 export default {
     props: {
-        propertyId: Number
+        propertyId: String
     },
 
     setup(props) {
         const propertyStore = usePropertyStore()
 
-        const property = propertyStore.getProperty(props.propertyId)
+        const property = computed(() => propertyStore.getProperty(props.propertyId))
+
+        const deleteProperty = async () => {
+            await propertyStore.deleteProperty(props.propertyId)
+        }
 
         return {
-            property
+            property,
+
+            deleteProperty
         }
     }
 }
